@@ -1,15 +1,27 @@
+import { useState } from "react";
+import { Link } from "react-router";
+import routes from "../Router/routes";
 export default function Navbar() {
+  const [slug, setSlug] = useState();
+  const HandleChange = (e) => {
+    setSlug(e.target.value);
+  };
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Rehacktor</a>
+        <Link className="btn btn-ghost text-xl" to={routes.home}>Rehacktor</Link>
+       
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 content-center items-center">
         <input
+          onChange={HandleChange}
           type="text"
           placeholder="Search"
           className="input input-bordered w-24 md:w-auto"
         />
+        <Link to={`/search/${slug}`}>
+          <button className="btn btn-sm">Search</button>
+        </Link>
         <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
