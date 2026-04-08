@@ -1,16 +1,33 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import routes from "../Router/routes";
+import { useNavigate } from "react-router";
+import { useContext } from "react";
+import { UserContext } from "../Context/UserContext";
+
 export default function Navbar() {
   const [slug, setSlug] = useState();
   const HandleChange = (e) => {
     setSlug(e.target.value);
   };
+
+  const navigate = useNavigate();
+
+  const { user, signOut } = useContext(UserContext);
+
+  const handleLogout = async () => {
+    console.log(user)
+    await navigate("/");
+    signOut();
+    console.log(user)
+  };
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <Link className="btn btn-ghost text-xl" to={routes.home}>Rehacktor</Link>
-       
+        <Link className="btn btn-ghost text-xl" to={routes.home}>
+          Rehacktor
+        </Link>
       </div>
       <div className="flex gap-2 content-center items-center">
         <input
@@ -45,11 +62,21 @@ export default function Navbar() {
                 <span className="badge">New</span>
               </a>
             </li>
+            {!user && (
+              <>
+                <li>
+                  <Link to={routes.register}>Register</Link>
+                </li>
+                <li>
+                  <Link to={routes.login}>Login</Link>
+                </li>
+              </>
+            ) || (
+              <li onClick={handleLogout}><p>Logout</p></li>
+            )
+            }
             <li>
               <a>Settings</a>
-            </li>
-            <li>
-              <a>Logout</a>
             </li>
           </ul>
         </div>
