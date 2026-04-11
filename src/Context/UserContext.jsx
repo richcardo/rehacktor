@@ -1,9 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { supabase } from "../database/supabase";
 import { useState, useEffect } from "react";
 import { createContext } from "react";
-export const 
-// eslint-disable-next-line react-refresh/only-export-components
-UserContext = createContext();
+export const // eslint-disable-next-line react-refresh/only-export-components
+  UserContext = createContext();
 export function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -15,7 +15,7 @@ export function UserContextProvider({ children }) {
     } = await supabase.auth.getSession();
     if (session) {
       const { user } = session;
-      setUser(() => user ?? null);
+      setUser(() => user);
       let { data: profiles } = await supabase
         .from("profiles")
         .select()
@@ -23,9 +23,11 @@ export function UserContextProvider({ children }) {
 
       setProfile(profiles[0]);
     }
+    console.log("profile " + profile);
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     getUser();
   }, []);
 
@@ -45,8 +47,20 @@ export function UserContextProvider({ children }) {
     await getUser();
   };
 
+  const updateProfile = async (newProfile) => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update(newProfile)
+      .eq("id", user.id)
+      .select();
+
+    await getUser();
+  };
+
   return (
-    <UserContext.Provider value={{ user, profile, signOut, signUp, login }}>
+    <UserContext.Provider
+      value={{ user, profile, signOut, signUp, login, updateProfile, getUser }}
+    >
       {children}
     </UserContext.Provider>
   );

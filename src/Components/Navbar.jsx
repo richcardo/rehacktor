@@ -16,10 +16,10 @@ export default function Navbar() {
   const { user, signOut } = useContext(UserContext);
 
   const handleLogout = async () => {
-    console.log(user)
+    console.log(user);
     await navigate("/");
     signOut();
-    console.log(user)
+    console.log(user);
   };
 
   return (
@@ -62,7 +62,7 @@ export default function Navbar() {
                 <span className="badge">New</span>
               </a>
             </li>
-            {!user && (
+            {(!user && (
               <>
                 <li>
                   <Link to={routes.register}>Register</Link>
@@ -71,10 +71,16 @@ export default function Navbar() {
                   <Link to={routes.login}>Login</Link>
                 </li>
               </>
-            ) || (
-              <li onClick={handleLogout}><p>Logout</p></li>
-            )
-            }
+            )) || (
+              <>
+                <li>
+                  <Link to={routes.profile}>Profile</Link>
+                </li>
+                <li onClick={handleLogout}>
+                  <p>Logout</p>
+                </li>
+              </>
+            )}
             <li>
               <a>Settings</a>
             </li>
