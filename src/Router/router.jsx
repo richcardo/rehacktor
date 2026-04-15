@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router";
 import Layout from "../Layout/Layout";
 import Homepage from "../Pages/Hompege";
 import routes from "./routes";
-import { getAllGamesLoader, getAllGenres, getFilteredBuGenreGames } from "./loaders";
+import { getAllGamesLoader, getAllGenres, getFilteredBuGenreGames, getGameDetails } from "./loaders";
 import { getSearchedGames } from "./loaders";
 import SearchPage from "../Pages/SearchPage";
 import GenrePage from "../Pages/GenrePage";
@@ -12,6 +12,7 @@ import RegisterPage from "../Pages/Auth/RegisterPage";
 import LoginPage from "../Pages/Auth/LoginPage"
 import ProfilePage from "../Pages/ProfilePage"
 import ProfileSettingsPage from "../Pages/ProfileSettingsPage"
+import DetailPage from "../Pages/DetailPage";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,12 @@ const router = createBrowserRouter([
         path : routes.genre,
         Component : GenrePage,
         loader : getFilteredBuGenreGames,
+      }, 
+      {
+        path : routes.detail,
+        Component : DetailPage,
+        loader : getGameDetails,
+
       }
     ],
   },

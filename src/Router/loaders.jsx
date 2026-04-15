@@ -27,3 +27,11 @@ export async function getFilteredBuGenreGames({ params }) {
   const json = await promise.json();
   return json.results;
 }
+
+export async function getGameDetails({ params }) {
+  const promise = await fetch(
+    `https://api.rawg.io/api/games/${params.id}?key=${import.meta.env.VITE_API_KEYS}`,
+  );
+  const json = await promise.json();
+  return json;
+}
