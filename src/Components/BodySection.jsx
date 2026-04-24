@@ -5,6 +5,34 @@ import { useState, useEffect } from "react";
 
 export default function BodySection({ game, profile_id }) {
   const [isFavourite, setIsFavourite] = useState(false);
+  const [description, setDescription] = useState();
+  const [gameReviews, setGameReviews] = useState();
+  const [checkReviews, setCheckReviews] = useState(false);
+
+  const handle_description = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const get_reviews = async () => {
+    let { data: reviews, error } = await supabase
+      .from("reviews")
+      .select("*")
+      .eq("game_id", game.id);
+
+    setGameReviews(reviews);
+  };
+
+  const add_review = async () => {
+    const { data, error } = await supabase
+      .from("reviews")
+      .insert([
+        { profile_id, game_id: game.id, game_name: game.name, description },
+      ])
+      .select();
+
+    setDescription("");
+    setCheckReviews(!checkReviews);
+  };
 
   const get_favourite = async () => {
     let { data: favourites, error } = await supabase
@@ -20,7 +48,9 @@ export default function BodySection({ game, profile_id }) {
 
   useEffect(() => {
     get_favourite();
-  }, []);
+    get_reviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkReviews]);
 
   const add_game = async () => {
     const { data, error } = await supabase
@@ -48,8 +78,24 @@ export default function BodySection({ game, profile_id }) {
           name="reviews"
           id="reviews"
           placeholder="Type your review here..."
-          className="textarea w-1/2"
+          className="textarea w-1/2 mb-3"
+          onChange={handle_description}
+          value={description}
         ></textarea>
+        <button className="btn bg-nav-gray w-1/2" onClick={add_review}>
+          Send
+        </button>
+        <div className="border border-nav-gray h-[200px] w-2/3 my-3 overflow-auto text-white">
+          {gameReviews &&
+            gameReviews.map((review) => {
+              return (
+                <div className="border-b border-nav-gray p-3" key={review.id}>
+                  <p className="font-bold">{review.game_name}</p>
+                  <p>{review.description}</p>
+                </div>
+              );
+            })}
+        </div>
       </div>
       <div>
         {(isFavourite && (
